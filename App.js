@@ -1,11 +1,17 @@
 import React from 'react';
 import Slider from 'react-native-slider';
+import { LinearCopy } from 'gl-react';
 import { Dimensions, StyleSheet, Text, View } from 'react-native';
 import { Surface } from 'gl-react-expo';
 import { BlurXY } from './Blur';
+import GLImage from './GLImage';
 
 const { width: ScreenWidth, height: ScreenHeight } = Dimensions.get('window');
-const exampleImage = { uri: 'https://i.imgur.com/iPKTONG.jpg' };
+const exampleImage = {
+  uri: 'https://i.imgur.com/iPKTONG.jpg',
+  width: 1024,
+  height: 683,
+};
 
 export default class App extends React.Component {
   state = {
@@ -26,11 +32,16 @@ export default class App extends React.Component {
 
     return (
       <Surface style={{ width: ScreenWidth, height: ScreenHeight }}>
-        <BlurXY factor={factor}>
-          <BlurXY factor={factor}>
-            {exampleImage}
+        <LinearCopy>
+          <BlurXY factor={factor} width={ScreenWidth / 2} height={ScreenHeight / 2}>
+            <GLImage
+              source={exampleImage}
+              resizeMode="cover"
+              width={ScreenWidth}
+              height={ScreenHeight}
+            />
           </BlurXY>
-        </BlurXY>
+        </LinearCopy>
       </Surface>
     );
   }
@@ -45,9 +56,9 @@ export default class App extends React.Component {
             onValueChange={this._changeBlurFactor}
             trackStyle={styles.sliderTrack}
             thumbStyle={styles.sliderThumb}
-            minimumValue={0.0}
+            minimumValue={2.0}
             maximumValue={60.0}
-            minimumTrackTintColor="rgba(220,220,220,0.8)"
+            minimumTrackTintColor="rgba(230,230,230,0.8)"
           />
         </View>
       </View>
@@ -83,12 +94,12 @@ const styles = StyleSheet.create({
   sliderTrack: {
     height: 3,
     borderRadius: 1,
-    backgroundColor: 'rgba(210,210,210,0.6)',
+    backgroundColor: 'rgba(220,220,220,0.6)',
   },
   sliderThumb: {
     width: 4,
     height: 22,
     borderRadius: 2,
-    backgroundColor: 'rgba(220,220,220,0.8)',
+    backgroundColor: 'rgba(230,230,230,0.8)',
   },
 });
