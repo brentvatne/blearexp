@@ -1,9 +1,16 @@
 import React from 'react';
-import Slider from 'react-native-slider';
 import { LinearCopy } from 'gl-react';
-import { Dimensions, StyleSheet, Text, View } from 'react-native';
+import {
+  Dimensions,
+  Platform,
+  StyleSheet,
+  Text,
+  View,
+  Slider,
+} from 'react-native';
 import { Surface } from 'gl-react-expo';
 import { BlurXY } from './Blur';
+import { MultiPassBlur } from './MultiPassBlur';
 import GLImage from './GLImage';
 
 const { width: ScreenWidth, height: ScreenHeight } = Dimensions.get('window');
@@ -13,9 +20,13 @@ const exampleImage = {
   height: 683,
 };
 
+const DEFAULT_FACTOR = 4.0
+const MAX_FACTOR = 10.0;
+const MIN_FACTOR = 1.0;
+
 export default class App extends React.Component {
   state = {
-    factor: 5.0,
+    factor: DEFAULT_FACTOR,
   };
 
   render() {
@@ -33,14 +44,18 @@ export default class App extends React.Component {
     return (
       <Surface style={{ width: ScreenWidth, height: ScreenHeight }}>
         <LinearCopy>
-          <BlurXY factor={factor} width={ScreenWidth / 2} height={ScreenHeight / 2}>
+          <MultiPassBlur
+            passes={12}
+            factor={factor}
+            width={ScreenWidth}
+            height={ScreenHeight}>
             <GLImage
               source={exampleImage}
               resizeMode="cover"
               width={ScreenWidth}
               height={ScreenHeight}
             />
-          </BlurXY>
+          </MultiPassBlur>
         </LinearCopy>
       </Surface>
     );
@@ -51,14 +66,16 @@ export default class App extends React.Component {
       <View style={styles.controlsContainer}>
         <View style={styles.sliderContainer}>
           <Slider
-            step={1.0}
-            value={this.state.factor}
+            step={0.5}
             onValueChange={this._changeBlurFactor}
-            trackStyle={styles.sliderTrack}
-            thumbStyle={styles.sliderThumb}
-            minimumValue={2.0}
-            maximumValue={60.0}
-            minimumTrackTintColor="rgba(230,230,230,0.8)"
+            minimumValue={MIN_FACTOR}
+            maximumValue={MAX_FACTOR}
+            value={DEFAULT_FACTOR}
+            minimumTrackTintColor={
+              Platform.OS === 'android' ? '#fafafa' : 'rgba(230,230,230,0.8)'
+            }
+            maximumTrackTintColor="rgba(220,220,220,0.8)"
+            thumbTintColor="rgba(230,230,230,0.8)"
           />
         </View>
       </View>
@@ -90,16 +107,5 @@ const styles = StyleSheet.create({
     left: 50,
     right: 50,
     height: 50,
-  },
-  sliderTrack: {
-    height: 3,
-    borderRadius: 1,
-    backgroundColor: 'rgba(220,220,220,0.6)',
-  },
-  sliderThumb: {
-    width: 4,
-    height: 22,
-    borderRadius: 2,
-    backgroundColor: 'rgba(230,230,230,0.8)',
   },
 });
