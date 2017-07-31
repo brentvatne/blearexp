@@ -6,13 +6,12 @@
   "private": true,
   "main": "node_modules/expo/AppEntry.js",
   "dependencies": {
+    "@brentvatne/gl-react-expo": "^3.9.0",
     "expo": "^19.0.0",
     "gl-react": "3.9.0",
-    "gl-react-expo": "3.9.0",
-    "gl-react-image": "^0.0.2",
-    "glsl-fast-gaussian-blur": "^1.0.2",
     "react": "16.0.0-alpha.12",
     "react-native": "https://github.com/expo/react-native/archive/sdk-19.0.0.tar.gz",
-    "react-native-slider": "^0.10.0"
+    "rect-clamp": "^0.0.0",
+    "rect-crop": "^0.0.0"
   }
 }

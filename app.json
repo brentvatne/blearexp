@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "blearexp",
-    "description": "An empty new project",
+    "description": "Make a cute blurry image background from any of your photos",
     "slug": "blearexp",
     "privacy": "public",
     "sdkVersion": "19.0.0",

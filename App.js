@@ -8,7 +8,7 @@ import {
   View,
   Slider,
 } from 'react-native';
-import { Surface } from 'gl-react-expo';
+import { Surface } from '@brentvatne/gl-react-expo';
 import { BlurXY } from './Blur';
 import { MultiPassBlur } from './MultiPassBlur';
 import GLImage from './GLImage';

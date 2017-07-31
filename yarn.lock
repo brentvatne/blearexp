@@ -2,6 +2,13 @@
 # yarn lockfile v1
 
 
+"@brentvatne/gl-react-expo@^3.9.0":
+  version "3.9.0"
+  resolved "https://registry.yarnpkg.com/@brentvatne/gl-react-expo/-/gl-react-expo-3.9.0.tgz#f19d906861d65d316e44cd31b287a00d62166f52"
+  dependencies:
+    invariant "^2.2.1"
+    prop-types "^15.5.8"
+
 "@expo/vector-icons@^5.0.0":
   version "5.0.0"
   resolved "https://registry.yarnpkg.com/@expo/vector-icons/-/vector-icons-5.0.0.tgz#380d578a58b736b693acdd1aa86f8b6576465ba4"
@@ -1647,20 +1654,6 @@ gl-format-compiler-error@^1.0.2:
     glsl-shader-name "^1.0.0"
     sprintf-js "^1.0.3"
 
-gl-react-expo@3.9.0:
-  version "3.9.0"
-  resolved "https://registry.yarnpkg.com/gl-react-expo/-/gl-react-expo-3.9.0.tgz#3677afef3c056ebaa891191d984801e72d47c933"
-  dependencies:
-    invariant "^2.2.1"
-    prop-types "^15.5.8"
-
-gl-react-image@^0.0.2:
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/gl-react-image/-/gl-react-image-0.0.2.tgz#61c573f6b59d036c58d3f64934f0cd426f437deb"
-  dependencies:
-    rect-clamp "0.0.0"
-    rect-crop "0.0.0"
-
 gl-react@3.9.0:
   version "3.9.0"
   resolved "https://registry.yarnpkg.com/gl-react/-/gl-react-3.9.0.tgz#46f8732160e7ff09480b64882d64a7ea636f5ce9"
@@ -1719,10 +1712,6 @@ glogg@^1.0.0:
   resolved "https://registry.yarnpkg.com/glogg/-/glogg-1.0.0.tgz#7fe0f199f57ac906cf512feead8f90ee4a284fc5"
   dependencies:
     sparkles "^1.0.0"
-
-glsl-fast-gaussian-blur@^1.0.2:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/glsl-fast-gaussian-blur/-/glsl-fast-gaussian-blur-1.0.2.tgz#95bc77f644a22f06e5ed58e128697f8b17290b08"
 
 glsl-shader-name@^1.0.0:
   version "1.0.0"
@@ -2829,12 +2818,6 @@ react-native-safe-module@^1.1.0:
   dependencies:
     dedent "^0.6.0"
 
-react-native-slider@^0.10.0:
-  version "0.10.0"
-  resolved "https://registry.yarnpkg.com/react-native-slider/-/react-native-slider-0.10.0.tgz#43de21a0442a8f8163f431886f52bcf4ada04fd9"
-  dependencies:
-    prop-types "^15.5.6"
-
 react-native-svg@5.3.0:
   version "5.3.0"
   resolved "https://registry.yarnpkg.com/react-native-svg/-/react-native-svg-5.3.0.tgz#0d2ca98bee6726d627c2ca31617ac9c5f7d42daf"
@@ -3016,11 +2999,11 @@ rebound@^0.0.13:
   version "0.0.13"
   resolved "https://registry.yarnpkg.com/rebound/-/rebound-0.0.13.tgz#4a225254caf7da756797b19c5817bf7a7941fac1"
 
-rect-clamp@0.0.0:
+rect-clamp@^0.0.0:
   version "0.0.0"
   resolved "https://registry.yarnpkg.com/rect-clamp/-/rect-clamp-0.0.0.tgz#652f91c5a5bfeac125c52b9ade82ebe05507641b"
 
-rect-crop@0.0.0:
+rect-crop@^0.0.0:
   version "0.0.0"
   resolved "https://registry.yarnpkg.com/rect-crop/-/rect-crop-0.0.0.tgz#f6ea75863021177566887d4ca60e466e8a1c3898"
 
