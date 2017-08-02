@@ -12,6 +12,7 @@ import { Surface } from '@brentvatne/gl-react-expo';
 import { BlurXY } from './Blur';
 import { MultiPassBlur } from './MultiPassBlur';
 import GLImage from './GLImage';
+import Camera from './Camera';
 
 const { width: ScreenWidth, height: ScreenHeight } = Dimensions.get('window');
 const exampleImage = {
@@ -49,12 +50,7 @@ export default class App extends React.Component {
             factor={factor}
             width={ScreenWidth}
             height={ScreenHeight}>
-            <GLImage
-              source={exampleImage}
-              resizeMode="cover"
-              width={ScreenWidth}
-              height={ScreenHeight}
-            />
+            <Camera position="front" />
           </MultiPassBlur>
         </LinearCopy>
       </Surface>
