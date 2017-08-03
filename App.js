@@ -6,6 +6,7 @@ import {
   Platform,
   StyleSheet,
   Text,
+  StatusBar,
   View,
   Slider,
 } from 'react-native';
@@ -73,6 +74,7 @@ class App extends React.Component {
         </Surface>
 
         {__DEV__ && <KeepAwake />}
+        <StatusBar hidden />
         <Controls
           onChangeImage={this._updateImage}
           onChangeFactor={this._updateFactor}
@@ -100,7 +102,7 @@ class Controls extends React.Component {
       <View style={styles.controlsContainer}>
         <View style={styles.sliderContainer}>
           <Slider
-            step={0.25}
+            step={0.5}
             onValueChange={this.props.onChangeFactor}
             minimumValue={MIN_FACTOR}
             maximumValue={MAX_FACTOR}
@@ -174,7 +176,7 @@ class SaveButton extends React.Component {
   render() {
     return (
       <Touchable
-        hitSlop={{ top: 25, bottom: 25, left: 20, right: 10 }}
+        hitSlop={{ top: 25, bottom: 25, left: 10, right: 20 }}
         background={Touchable.Ripple('#eeeeee', true)}
         onPress={this._handlePress}>
         <View>
@@ -213,7 +215,7 @@ const styles = StyleSheet.create({
   leftButtonControlContainer: {
     position: 'absolute',
     paddingBottom: 15,
-    paddingLeft: 12,
+    paddingLeft: 8,
     bottom: 0,
     left: 0,
   },
@@ -228,7 +230,7 @@ const styles = StyleSheet.create({
   rightButtonControlContainer: {
     position: 'absolute',
     paddingBottom: 15,
-    paddingRight: 15,
+    paddingRight: 8,
     bottom: 0,
     right: 0,
   },
