@@ -1,4 +1,4 @@
-import { createComponent, Shaders, Node, GLSL, connectSize } from 'gl-react';
+import { Shaders, Node, GLSL, connectSize } from 'gl-react';
 import React from 'react';
 import rectCrop from 'rect-crop';
 import rectClamp from 'rect-clamp';
