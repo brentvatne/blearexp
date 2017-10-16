@@ -1,7 +1,8 @@
 import React from 'react';
-import { ImagePicker, KeepAwake } from 'expo';
+import { takeSnapshotAsync, ImagePicker, KeepAwake } from 'expo';
 import { LinearCopy } from 'gl-react';
 import {
+  CameraRoll,
   Dimensions,
   Platform,
   StyleSheet,
@@ -53,31 +54,41 @@ class App extends React.Component {
 
     return (
       <View style={styles.container}>
-        <Surface style={{ width: ScreenWidth, height: ScreenHeight }}>
-          <LinearCopy>
-            <Effects
-              saturation={Math.max(1.25, this.state.factor / MAX_FACTOR * 2.0)}>
-              <MultiPassBlur
-                passes={12}
-                factor={factor}
-                width={ScreenWidth}
-                height={ScreenHeight}>
-                <GLImage
-                  source={this.state.image}
-                  resizeMode="cover"
+        <View
+          collapsable={false}
+          ref={view => {
+            this._canvas = view;
+          }}>
+          <Surface style={{ width: ScreenWidth, height: ScreenHeight }}>
+            <LinearCopy>
+              <Effects
+                saturation={Math.max(
+                  1.25,
+                  this.state.factor / MAX_FACTOR * 2.0
+                )}>
+                <MultiPassBlur
+                  passes={12}
+                  factor={factor}
                   width={ScreenWidth}
-                  height={ScreenHeight}
-                />
-              </MultiPassBlur>
-            </Effects>
-          </LinearCopy>
-        </Surface>
+                  height={ScreenHeight}>
+                  <GLImage
+                    source={this.state.image}
+                    resizeMode="cover"
+                    width={ScreenWidth}
+                    height={ScreenHeight}
+                  />
+                </MultiPassBlur>
+              </Effects>
+            </LinearCopy>
+          </Surface>
+        </View>
 
         {__DEV__ && <KeepAwake />}
         <StatusBar hidden />
         <Controls
           onChangeImage={this._updateImage}
           onChangeFactor={this._updateFactor}
+          onSaveImage={this._saveImageAsync}
         />
       </View>
     );
@@ -85,6 +96,16 @@ class App extends React.Component {
 
   _updateImage = image => {
     this.setState({ image });
+  };
+
+  _saveImageAsync = async () => {
+    let result = await takeSnapshotAsync(this._canvas, {
+      format: 'png',
+      result: 'file',
+    });
+
+    let saveResult = await CameraRoll.saveToCameraRoll(result, 'photo');
+    alert('Saved to your photos!');
   };
 
   _updateFactor = factor => {
@@ -121,7 +142,7 @@ class Controls extends React.Component {
         </View>
 
         <View style={styles.rightButtonControlContainer}>
-          <SaveButton />
+          <SaveButton onPress={this.props.onSaveImage} />
         </View>
       </View>
     );
@@ -187,7 +208,7 @@ class SaveButton extends React.Component {
   }
 
   _handlePress = () => {
-    alert('Does not do anything yet ;O')
+    this.props.onPress();
   };
 }
 
