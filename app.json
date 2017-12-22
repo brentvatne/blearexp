@@ -8,12 +8,17 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "primaryColor": "#cccccc",
-    "icon": "./assets/icons/app-icon.png",
+    "icon": "./assets/icon.png",
     "splash": {
-      "image": "./assets/icons/loading-icon.png"
+      "image": "./assets/splash.png",
+      "resizeMode": "cover"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "icon": "./assets/icon-ios.png"
+    },
+    "android": {
+      "icon": "./assets/icon-android.png"
     }
   }
 }

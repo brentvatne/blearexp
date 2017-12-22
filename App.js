@@ -18,36 +18,84 @@ import {
   ActionSheetProvider,
   connectActionSheet,
 } from '@expo/react-native-action-sheet';
+import { AppLoading, FileSystem } from 'expo';
 
-import { BlurXY } from './Blur';
-import { MultiPassBlur } from './MultiPassBlur';
-import Effects from './Effects';
-import GLImage from './GLImage';
+import { BlurXY } from './src/Blur';
+import { MultiPassBlur } from './src/MultiPassBlur';
+import Effects from './src/Effects';
+import GLImage from './src/GLImage';
 
 const { width: ScreenWidth, height: ScreenHeight } = Dimensions.get('window');
 const DEFAULT_FACTOR = 4.0;
 const MAX_FACTOR = 15.0;
 const MIN_FACTOR = 1.0;
 
+const DEFAULT_IMAGE_URI = 'https://i.imgur.com/iPKTONG.jpg';
+const DEFAULT_IMAGE_NAME = (() => {
+  let parts = DEFAULT_IMAGE_URI.split('/');
+  return parts[parts.length - 1];
+})();
+const DEFAULT_IMAGE_FILE_PATH =
+  FileSystem.documentDirectory + DEFAULT_IMAGE_NAME;
+const DEFAULT_IMAGE_WIDTH = 1024;
+const DEFAULT_IMAGE_HEIGHT = 683;
+
 export default class AppContainer extends React.Component {
+  state = {
+    loaded: false,
+    localImageUri: null,
+  };
+
   render() {
+    if (!this.state.loaded) {
+      return (
+        <AppLoading
+          startAsync={this._loadAsync}
+          onFinish={() => this.setState({ loaded: true })}
+          onError={console.error}
+        />
+      );
+    }
+
     return (
       <ActionSheetProvider>
-        <App />
+        <App localImageUri={this.state.localImageUri} />
       </ActionSheetProvider>
     );
   }
+
+  _loadAsync = async () => {
+    let localImageUri;
+    try {
+      let { exists } = FileSystem.getInfoAsync(DEFAULT_IMAGE_FILE_PATH, {});
+      if (!exists) {
+        let { uri } = await FileSystem.downloadAsync(
+          DEFAULT_IMAGE_URI,
+          DEFAULT_IMAGE_FILE_PATH
+        );
+        localImageUri = uri;
+      }
+    } catch (e) {
+      // nope
+    } finally {
+      this.setState({ localImageUri, loaded: true });
+    }
+  };
 }
 
 class App extends React.Component {
-  state = {
-    factor: DEFAULT_FACTOR,
-    image: {
-      uri: 'https://i.imgur.com/iPKTONG.jpg',
-      width: 1024,
-      height: 683,
-    },
-  };
+  constructor(props, context) {
+    super(props, context);
+
+    this.state = {
+      factor: DEFAULT_FACTOR,
+      image: {
+        uri: this.props.localImageUri || DEFAULT_IMAGE_URI,
+        width: DEFAULT_IMAGE_WIDTH,
+        height: DEFAULT_IMAGE_HEIGHT,
+      },
+    };
+  }
 
   render() {
     const { factor } = this.state;
