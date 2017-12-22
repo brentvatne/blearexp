@@ -1,20 +1,16 @@
 {
   "expo": {
-    "name": "blearexp",
+    "name": "Blearexp",
     "description": "Make a cute blurry image background from any of your photos",
     "slug": "blearexp",
     "privacy": "public",
-    "sdkVersion": "19.0.0",
+    "sdkVersion": "24.0.0",
     "version": "1.0.0",
     "orientation": "portrait",
     "primaryColor": "#cccccc",
     "icon": "./assets/icons/app-icon.png",
-    "loading": {
-      "icon": "./assets/icons/loading-icon.png",
-      "hideExponentText": false
-    },
-    "packagerOpts": {
-      "assetExts": ["ttf", "mp4"]
+    "splash": {
+      "image": "./assets/icons/loading-icon.png"
     },
     "ios": {
       "supportsTablet": true
