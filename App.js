@@ -211,8 +211,8 @@ class CameraButton extends React.Component {
   }
 
   _handlePress = () => {
-    let options = ['Choose from library', 'Cancel'];
-    let cancelButtonIndex = 1;
+    let options = ['Choose from library','Take a Picture', 'Cancel'];
+    let cancelButtonIndex = 2;
     this.props.showActionSheetWithOptions(
       {
         options,
@@ -222,6 +222,9 @@ class CameraButton extends React.Component {
         if (buttonIndex === 0) {
           this._openPickerAsync();
         }
+        if (buttonIndex === 1) {
+          this._openCamera();
+        }
       }
     );
   };
@@ -229,6 +232,19 @@ class CameraButton extends React.Component {
   _openPickerAsync = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       allowsEditing: false,
+    });
+
+    if (!result.cancelled) {
+      this.props.onSelectImage({
+        uri: result.uri,
+        width: result.width,
+        height: result.height,
+      });
+    }
+  };
+  _openCamera = async () => {
+    let result = await ImagePicker.launchCameraAsync({
+      base64: true,
     });
 
     if (!result.cancelled) {
