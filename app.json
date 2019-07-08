@@ -4,7 +4,7 @@
     "description": "Make a cute blurry image background from any of your photos",
     "slug": "blearexp",
     "privacy": "public",
-    "sdkVersion": "24.0.0",
+    "sdkVersion": "33.0.0",
     "version": "1.0.0",
     "orientation": "portrait",
     "primaryColor": "#cccccc",
@@ -19,6 +19,11 @@
     },
     "android": {
       "icon": "./assets/icon-android.png"
-    }
+    },
+    "platforms": [
+      "android",
+      "ios",
+      "web"
+    ]
   }
 }

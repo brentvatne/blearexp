@@ -1,24 +1,29 @@
 import React from 'react';
-import { takeSnapshotAsync, ImagePicker, KeepAwake } from 'expo';
-import { LinearCopy } from 'gl-react';
 import {
-  CameraRoll,
   Dimensions,
   Platform,
+  Image,
   StyleSheet,
   Text,
   StatusBar,
   View,
   Slider,
 } from 'react-native';
+import { LinearCopy } from 'gl-react';
+import { Surface } from 'gl-react-expo';
+import { captureRef as takeSnapshotAsync } from 'react-native-view-shot';
+import * as ImagePicker from 'expo-image-picker';
+import * as Permissions from 'expo-permissions';
+import * as MediaLibrary from 'expo-media-library';
+import * as FileSystem from 'expo-file-system';
 import { EvilIcons } from '@expo/vector-icons';
-import { Surface } from '@brentvatne/gl-react-expo';
+import { getInset } from 'react-native-safe-area-view';
 import Touchable from 'react-native-platform-touchable';
 import {
   ActionSheetProvider,
   connectActionSheet,
 } from '@expo/react-native-action-sheet';
-import { AppLoading, FileSystem } from 'expo';
+import { AppLoading } from 'expo';
 
 import { BlurXY } from './src/Blur';
 import { MultiPassBlur } from './src/MultiPassBlur';
@@ -39,6 +44,8 @@ const DEFAULT_IMAGE_FILE_PATH =
   FileSystem.documentDirectory + DEFAULT_IMAGE_NAME;
 const DEFAULT_IMAGE_WIDTH = 1024;
 const DEFAULT_IMAGE_HEIGHT = 683;
+const ACTIVE_IMAGE_FILE_PATH = FileSystem.cacheDirectory + 'active.png';
+const ALBUM_NAME = 'Blearexp';
 
 export default class AppContainer extends React.Component {
   state = {
@@ -112,7 +119,7 @@ class App extends React.Component {
               <Effects
                 saturation={Math.max(
                   1.25,
-                  this.state.factor / MAX_FACTOR * 2.0
+                  (this.state.factor / MAX_FACTOR) * 2.0
                 )}>
                 <MultiPassBlur
                   passes={12}
@@ -131,7 +138,6 @@ class App extends React.Component {
           </Surface>
         </View>
 
-        {__DEV__ && <KeepAwake />}
         <StatusBar hidden />
         <Controls
           onChangeImage={this._updateImage}
@@ -149,10 +155,17 @@ class App extends React.Component {
   _saveImageAsync = async () => {
     let result = await takeSnapshotAsync(this._canvas, {
       format: 'png',
-      result: 'file',
+      result: 'tmpfile',
     });
 
-    let saveResult = await CameraRoll.saveToCameraRoll(result, 'photo');
+    let asset = await MediaLibrary.createAssetAsync(result);
+    let album = await MediaLibrary.getAlbumAsync(ALBUM_NAME);
+    if (album) {
+      await MediaLibrary.addAssetsToAlbumAsync([asset], album, false);
+    } else {
+      await MediaLibrary.createAlbumAsync(ALBUM_NAME, asset.id, false);
+    }
+
     alert('Saved to your photos!');
   };
 
@@ -210,8 +223,18 @@ class CameraButton extends React.Component {
     );
   }
 
-  _handlePress = () => {
-    let options = ['Choose from library','Take a Picture', 'Cancel'];
+  _handlePress = async () => {
+    if ((await canAccessCameraAsync()) && (await canAccessCameraRollAsync())) {
+      this._openImagePicker();
+    } else {
+      alert(
+        'You need to give camera and camera roll permissions to use the app'
+      );
+    }
+  };
+
+  _openImagePicker = () => {
+    let options = ['Choose from library', 'Take a Picture', 'Cancel'];
     let cancelButtonIndex = 2;
     this.props.showActionSheetWithOptions(
       {
@@ -229,30 +252,54 @@ class CameraButton extends React.Component {
     );
   };
 
+  _onSelectImageAsync = async image => {
+    if (Platform.OS === 'ios') {
+      this.props.onSelectImage({
+        uri: image.uri,
+        width: image.width,
+        height: image.height,
+      });
+      return;
+    }
+
+    // On Android we need to copy it to cache directory to load in GLView
+    try {
+      let fromPath = image.uri;
+      let uriParts = fromPath.split('/');
+      let name = uriParts[uriParts.length - 1];
+      let destPath = `${FileSystem.cacheDirectory}/${name}`;
+      let result = await FileSystem.copyAsync({
+        from: fromPath,
+        to: destPath,
+      });
+
+      this.props.onSelectImage({
+        uri: destPath,
+        width: image.width,
+        height: image.height,
+      });
+    } catch (e) {
+      alert(`Error :( Some info: ${e.message}`);
+    }
+  };
+
   _openPickerAsync = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       allowsEditing: false,
     });
 
     if (!result.cancelled) {
-      this.props.onSelectImage({
-        uri: result.uri,
-        width: result.width,
-        height: result.height,
-      });
+      this._onSelectImageAsync(result);
     }
   };
+
   _openCamera = async () => {
     let result = await ImagePicker.launchCameraAsync({
       base64: true,
     });
 
     if (!result.cancelled) {
-      this.props.onSelectImage({
-        uri: result.uri,
-        width: result.width,
-        height: result.height,
-      });
+      this._onSelectImageAsync(result);
     }
   };
 }
@@ -276,6 +323,40 @@ class SaveButton extends React.Component {
   };
 }
 
+async function canAccessCameraRollAsync() {
+  let { status: existingStatus } = await Permissions.getAsync(
+    Permissions.CAMERA_ROLL
+  );
+  if (existingStatus === 'granted') {
+    return true;
+  }
+
+  let { status: askedStatus } = await Permissions.askAsync(
+    Permissions.CAMERA_ROLL
+  );
+  if (askedStatus === 'granted') {
+    return true;
+  }
+
+  return false;
+}
+
+async function canAccessCameraAsync() {
+  let { status: existingStatus } = await Permissions.getAsync(
+    Permissions.CAMERA
+  );
+  if (existingStatus === 'granted') {
+    return true;
+  }
+
+  let { status: askedStatus } = await Permissions.askAsync(Permissions.CAMERA);
+  if (askedStatus === 'granted') {
+    return true;
+  }
+
+  return false;
+}
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -285,10 +366,9 @@ const styles = StyleSheet.create({
   },
   controlsContainer: {
     position: 'absolute',
-    bottom: 0,
     left: 0,
     right: 0,
-    height: 50,
+    bottom: getInset ? getInset('bottom') / 2 : 0,
   },
   sliderContainer: {
     position: 'absolute',

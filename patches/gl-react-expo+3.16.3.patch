@@ -1,0 +1,48 @@
+diff --git a/node_modules/gl-react-expo/lib/GLViewNative.js b/node_modules/gl-react-expo/lib/GLViewNative.js
+index 66648e2..4ab5f32 100755
+--- a/node_modules/gl-react-expo/lib/GLViewNative.js
++++ b/node_modules/gl-react-expo/lib/GLViewNative.js
+@@ -18,7 +18,7 @@ var _propTypes2 = _interopRequireDefault(_propTypes);
+ 
+ var _reactNative = require("react-native");
+ 
+-var _expo = require("expo");
++var _expoGl = require("expo-gl");
+ 
+ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+ 
+@@ -96,7 +96,7 @@ var GLViewNative = function (_Component) {
+         _extends({}, rest, {
+           style: [{ position: "relative", overflow: "hidden" }, style]
+         }),
+-        _react2.default.createElement(_expo.GLView, {
++        _react2.default.createElement(_expoGl.GLView, {
+           style: [style, {
+             flex: 1,
+             position: "absolute",
+diff --git a/node_modules/gl-react-expo/lib/GLViewNative.js.flow b/node_modules/gl-react-expo/lib/GLViewNative.js.flow
+index 142db54..9d5015d 100755
+--- a/node_modules/gl-react-expo/lib/GLViewNative.js.flow
++++ b/node_modules/gl-react-expo/lib/GLViewNative.js.flow
+@@ -2,7 +2,7 @@
+ import React, { Component } from "react";
+ import PropTypes from "prop-types";
+ import { View } from "react-native";
+-import { GLView as EXGLView } from "expo";
++import { GLView as EXGLView } from "expo-gl";
+ 
+ const propTypes = {
+   onContextCreate: PropTypes.func.isRequired,
+diff --git a/node_modules/gl-react-expo/src/GLViewNative.js b/node_modules/gl-react-expo/src/GLViewNative.js
+index 142db54..9d5015d 100755
+--- a/node_modules/gl-react-expo/src/GLViewNative.js
++++ b/node_modules/gl-react-expo/src/GLViewNative.js
+@@ -2,7 +2,7 @@
+ import React, { Component } from "react";
+ import PropTypes from "prop-types";
+ import { View } from "react-native";
+-import { GLView as EXGLView } from "expo";
++import { GLView as EXGLView } from "expo-gl";
+ 
+ const propTypes = {
+   onContextCreate: PropTypes.func.isRequired,

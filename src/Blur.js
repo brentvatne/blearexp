@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Shaders, Node, GLSL, connectSize } from 'gl-react';
-import { Surface } from '@brentvatne/gl-react-expo';
+import { Surface } from 'gl-react-expo';
 
 const shaders = Shaders.create({
   blur1D: {

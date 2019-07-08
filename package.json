@@ -1,15 +1,36 @@
 {
   "private": true,
   "main": "node_modules/expo/AppEntry.js",
+  "scripts": {
+    "postinstall": "patch-package"
+  },
   "dependencies": {
-    "@brentvatne/gl-react-expo": "^3.9.0",
-    "@expo/react-native-action-sheet": "^1.0.0",
-    "expo": "^24.0.0",
-    "gl-react": "3.9.0",
-    "react": "16.0.0",
-    "react-native": "https://github.com/expo/react-native/archive/sdk-24.0.0.tar.gz",
+    "@expo/react-native-action-sheet": "^2.0.0",
+    "expo": "^33.0.0",
+    "expo-file-system": "~5.0.1",
+    "expo-gl": "~5.0.1",
+    "expo-image-picker": "~5.0.2",
+    "expo-keep-awake": "~5.0.1",
+    "expo-media-library": "~5.0.1",
+    "expo-permissions": "~5.0.1",
+    "gl-react": "3.15.0",
+    "gl-react-expo": "^3.16.3",
+    "react": "16.8.3",
+    "react-dom": "^16.8.6",
+    "react-native": "https://github.com/expo/react-native/archive/sdk-33.0.0.tar.gz",
+    "react-native-gesture-handler": "~1.2.1",
     "react-native-platform-touchable": "^1.1.1",
+    "react-native-safe-area-view": "^0.14.6",
+    "react-native-web": "^0.11.5",
     "rect-clamp": "^0.0.0",
     "rect-crop": "^0.0.0"
+  },
+  "devDependencies": {
+    "patch-package": "^6.1.2",
+    "postinstall-postinstall": "^2.0.0"
+  },
+  "resolutions": {
+    "**/@babel/runtime": "7.5.0",
+    "**/@babel/plugin-proposal-object-rest-spread": "7.4.4"
   }
 }
