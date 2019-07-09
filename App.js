@@ -45,7 +45,6 @@ const DEFAULT_IMAGE_FILE_PATH =
   FileSystem.documentDirectory + DEFAULT_IMAGE_NAME;
 const DEFAULT_IMAGE_WIDTH = 1024;
 const DEFAULT_IMAGE_HEIGHT = 683;
-const ACTIVE_IMAGE_FILE_PATH = FileSystem.cacheDirectory + 'active.png';
 const ALBUM_NAME = 'Blearexp';
 
 export default class AppContainer extends React.Component {
@@ -66,20 +65,17 @@ export default class AppContainer extends React.Component {
   }
 
   _loadAsync = async () => {
-    let localImageUri;
     try {
-      let { exists } = FileSystem.getInfoAsync(DEFAULT_IMAGE_FILE_PATH, {});
+      let { exists } = await FileSystem.getInfoAsync(DEFAULT_IMAGE_FILE_PATH);
       if (!exists) {
         let { uri } = await FileSystem.downloadAsync(
           DEFAULT_IMAGE_URI,
           DEFAULT_IMAGE_FILE_PATH
         );
-        localImageUri = uri;
       }
+      this.setState({ localImageUri: DEFAULT_IMAGE_FILE_PATH });
     } catch (e) {
       // nope
-    } finally {
-      this.setState({ localImageUri });
     }
   };
 }
@@ -91,7 +87,7 @@ class App extends React.Component {
     this.state = {
       factor: DEFAULT_FACTOR,
       image: {
-        uri: this.props.localImageUri || DEFAULT_IMAGE_URI,
+        uri: this.props.localImageUri,
         width: DEFAULT_IMAGE_WIDTH,
         height: DEFAULT_IMAGE_HEIGHT,
       },
@@ -108,28 +104,30 @@ class App extends React.Component {
           ref={view => {
             this._canvas = view;
           }}>
-          <Surface style={{ width: ScreenWidth, height: ScreenHeight }}>
-            <LinearCopy>
-              <Effects
-                saturation={Math.max(
-                  1.25,
-                  (this.state.factor / MAX_FACTOR) * 2.0
-                )}>
-                <MultiPassBlur
-                  passes={12}
-                  factor={factor}
-                  width={ScreenWidth}
-                  height={ScreenHeight}>
-                  <GLImage
-                    source={this.state.image}
-                    resizeMode="cover"
+          {this.state.image.uri ? (
+            <Surface style={{ width: ScreenWidth, height: ScreenHeight }}>
+              <LinearCopy>
+                <Effects
+                  saturation={Math.max(
+                    1.25,
+                    (this.state.factor / MAX_FACTOR) * 2.0
+                  )}>
+                  <MultiPassBlur
+                    passes={12}
+                    factor={factor}
                     width={ScreenWidth}
-                    height={ScreenHeight}
-                  />
-                </MultiPassBlur>
-              </Effects>
-            </LinearCopy>
-          </Surface>
+                    height={ScreenHeight}>
+                    <GLImage
+                      source={this.state.image}
+                      resizeMode="cover"
+                      width={ScreenWidth}
+                      height={ScreenHeight}
+                    />
+                  </MultiPassBlur>
+                </Effects>
+              </LinearCopy>
+            </Surface>
+          ) : null}
         </View>
 
         <StatusBar hidden />
@@ -354,7 +352,7 @@ async function canAccessCameraAsync() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#000',
     alignItems: 'center',
     justifyContent: 'center',
   },

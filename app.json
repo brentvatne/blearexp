@@ -15,10 +15,17 @@
     },
     "ios": {
       "supportsTablet": true,
+      "bundleIdentifier": "xyz.bront.blearexp",
       "icon": "./assets/icon-ios.png"
     },
     "android": {
-      "icon": "./assets/icon-android.png"
+      "icon": "./assets/icon-android.png",
+      "package": "xyz.bront.blearexp",
+      "permissions": ["READ_EXTERNAL_STORAGE", "WRITE_EXTERNAL_STORAGE", "CAMERA"],
+      "versionCode": 3
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0
     },
     "platforms": [
       "android",
