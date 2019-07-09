@@ -29,6 +29,7 @@ import { BlurXY } from './src/Blur';
 import { MultiPassBlur } from './src/MultiPassBlur';
 import Effects from './src/Effects';
 import GLImage from './src/GLImage';
+import AnimatedSplashScreen from './AnimatedSplashScreen';
 
 const { width: ScreenWidth, height: ScreenHeight } = Dimensions.get('window');
 const DEFAULT_FACTOR = 4.0;
@@ -49,25 +50,18 @@ const ALBUM_NAME = 'Blearexp';
 
 export default class AppContainer extends React.Component {
   state = {
-    loaded: false,
     localImageUri: null,
   };
 
   render() {
-    if (!this.state.loaded) {
-      return (
-        <AppLoading
-          startAsync={this._loadAsync}
-          onFinish={() => this.setState({ loaded: true })}
-          onError={console.error}
-        />
-      );
-    }
-
     return (
-      <ActionSheetProvider>
-        <App localImageUri={this.state.localImageUri} />
-      </ActionSheetProvider>
+      <AnimatedSplashScreen
+        loadAsync={this._loadAsync}
+        splashImageSource={require('./assets/splash.png')}>
+        <ActionSheetProvider>
+          <App localImageUri={this.state.localImageUri} />
+        </ActionSheetProvider>
+      </AnimatedSplashScreen>
     );
   }
 
@@ -85,7 +79,7 @@ export default class AppContainer extends React.Component {
     } catch (e) {
       // nope
     } finally {
-      this.setState({ localImageUri, loaded: true });
+      this.setState({ localImageUri });
     }
   };
 }
