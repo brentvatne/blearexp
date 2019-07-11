@@ -6,6 +6,7 @@ import {
   StyleSheet,
   Text,
   StatusBar,
+  TouchableOpacity,
   View,
   Slider,
 } from 'react-native';
@@ -18,7 +19,6 @@ import * as MediaLibrary from 'expo-media-library';
 import * as FileSystem from 'expo-file-system';
 import { EvilIcons } from '@expo/vector-icons';
 import { getInset } from 'react-native-safe-area-view';
-import Touchable from 'react-native-platform-touchable';
 import {
   ActionSheetProvider,
   connectActionSheet,
@@ -145,6 +145,11 @@ class App extends React.Component {
   };
 
   _saveImageAsync = async () => {
+    if (!await canAccessCameraRollAsync()) {
+      alert('This app needs camera roll permissions in order to be able to save the image.')
+      return;
+    }
+
     let result = await takeSnapshotAsync(this._canvas, {
       format: 'png',
       result: 'tmpfile',
@@ -206,12 +211,11 @@ class Controls extends React.Component {
 class CameraButton extends React.Component {
   render() {
     return (
-      <Touchable
+      <TouchableOpacity
         hitSlop={{ top: 25, bottom: 25, left: 20, right: 10 }}
-        background={Touchable.Ripple('#ffffff', true)}
         onPress={this._handlePress}>
         <EvilIcons name="camera" style={styles.icon} size={45} />
-      </Touchable>
+      </TouchableOpacity>
     );
   }
 
@@ -299,14 +303,13 @@ class CameraButton extends React.Component {
 class SaveButton extends React.Component {
   render() {
     return (
-      <Touchable
+      <TouchableOpacity
         hitSlop={{ top: 25, bottom: 25, left: 10, right: 20 }}
-        background={Touchable.Ripple('#eeeeee', true)}
         onPress={this._handlePress}>
         <View>
           <EvilIcons name="check" style={styles.icon} size={45} />
         </View>
-      </Touchable>
+      </TouchableOpacity>
     );
   }
 

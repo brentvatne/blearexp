@@ -22,7 +22,7 @@
       "icon": "./assets/icon-android.png",
       "package": "xyz.bront.blearexp",
       "permissions": ["READ_EXTERNAL_STORAGE", "WRITE_EXTERNAL_STORAGE", "CAMERA"],
-      "versionCode": 3
+      "versionCode": 4
     },
     "updates": {
       "fallbackToCacheTimeout": 0
